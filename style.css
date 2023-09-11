@@ -1,3 +1,4 @@
-body {
-  background: ;
+.wrapper {
+  background: rgb(79, 157, 194);
+  min-height: 100vh;
 }
