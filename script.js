@@ -1,6 +1,10 @@
 let taskList = [];
 const entryElm = document.getElementById("entry");
 const badElm = document.getElementById("bad");
+const badHRElm = document.getElementById("badHr");
+const totalHrElm = document.getElementById("totalHr");
+
+const ttlHrPerWeek = 24 * 7;
 
 // get data from data on buttom click
 const handleOnSubmit = (form) => {
@@ -9,15 +13,18 @@ const handleOnSubmit = (form) => {
   const obj = {
     id: randomStr(),
     task: newTask.get("task"),
-    hr: newTask.get("hr"),
+    hr: +newTask.get("hr"),
     type: "entry",
   };
+
+  const ttlHrs = total();
+
   if (ttlHrs + obj.hr > ttlHrPerWeek) {
     return alert(
       "Sorry boss not enough time left to fit this task from last week"
     );
   }
-  const ttlHrs = total();
+  console.log(ttlHrs);
 
   // add to the global array
 
@@ -31,7 +38,7 @@ const handleOnSubmit = (form) => {
 
 const displayEntryTask = () => {
   let str = ``;
-
+  console.log(taskList);
   const entryListOnly = taskList.filter((item) => item.type === "entry");
 
   entryListOnly.map((item, i) => {
@@ -55,6 +62,7 @@ const displayEntryTask = () => {
   });
 
   entryElm.innerHTML = str;
+  total();
 };
 const displyBadTask = () => {
   let str = ``;
@@ -83,6 +91,8 @@ const displyBadTask = () => {
   </tr>`;
   });
 
+  const ttlBadHr = badListOnly.reduce((acc, item) => acc + item.hr, 0);
+  badHrElm.innerText = ttlBadHr;
   badElm.innerHTML = str;
 };
 
@@ -98,6 +108,7 @@ const randomStr = () => {
 
   return id;
 };
+
 const switchTask = (id, type) => {
   taskList = taskList.map((item) => {
     if (item.id === id) {
@@ -111,6 +122,7 @@ const switchTask = (id, type) => {
 
   displayEntryTask();
   displayBadTask();
+  total();
 };
 
 const handleOnDelete = (id) => {
@@ -122,6 +134,7 @@ const handleOnDelete = (id) => {
     total();
   }
 };
+
 const total = () => {
   const ttl = taskList.reduce((acc, item) => acc + item.hr, 0);
 
